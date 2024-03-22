@@ -12,6 +12,7 @@ import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -58,7 +59,7 @@ public class AlunoController {
            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();//
         }  
 
-        return ResponseEntity.status(HttpStatus.OK).body(alunoRepository.findById(email));//
+        return ResponseEntity.status(HttpStatus.OK).body(alunoRepository.findByEmail(email));//
 	}
    
 
@@ -81,6 +82,19 @@ public class AlunoController {
 
     }
 
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> excluirAluno(@PathVariable("id") long id){
+       Optional<Aluno> optionaAluno = alunoRepository.findById((id));
+
+       if (optionaAluno.isEmpty()) {
+          return ResponseEntity.status(HttpStatus.NOT_FOUND).build();//
+       }
+
+       alunoRepository.deleteById(id);
+
+       return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
 
     @Autowired
     private AlunoRepository alunoRepository;
